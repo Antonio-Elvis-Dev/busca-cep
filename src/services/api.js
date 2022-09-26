@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://cep.awesomeapi.com.br/json/",
+  baseURL: "https://viacep.com.br/ws/",
 });
 
 export default api;

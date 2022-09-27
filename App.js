@@ -18,16 +18,7 @@ export default function App() {
   const [buscaCep, setBuscaCep] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const [cep, setCep] = useState();
-  const [logradouro, setLogradouro] = useState();
-  const [bairro, setBairro] = useState();
-  const [cidade, setCidade] = useState();
-  const [estado, setEstado] = useState();
-
-  function limpar() {
-    setBuscaCep("");
-    inputRef.current.focus();
-  }
+  const [userCep, setUserCep] = useState(null);
 
   async function mostraCep() {
     if (buscaCep == "") {
@@ -39,20 +30,12 @@ export default function App() {
     try {
       const response = await api.get(`${buscaCep}/json`);
 
-      let cep = response.data["cep"];
-      let logradouro = response.data["logradouro"];
-      let bairro = response.data["bairro"];
-      let cidade = response.data["localidade"];
-      let estado = response.data["uf"];
-      setCep(cep);
-      setLogradouro(logradouro);
-      setBairro(bairro);
-      setCidade(cidade);
-      setEstado(estado);
+      setUserCep(response.data);
+
       Keyboard.dismiss();
       setLoading(false);
 
-      Keyboard.dismiss()
+      Keyboard.dismiss();
     } catch (error) {
       console.log(`ERROR ${error}`);
     }
@@ -60,6 +43,7 @@ export default function App() {
 
   function limpar() {
     setBuscaCep("");
+    setUserCep("");
     inputRef.current.focus();
   }
 
@@ -98,13 +82,20 @@ export default function App() {
           <Text style={styles.textoBtn}>Limpar</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.areaResultado}>
-        <Text style={styles.textoResultado}>CEP: {cep}</Text>
-        <Text style={styles.textoResultado}>Logradouro: {logradouro}</Text>
-        <Text style={styles.textoResultado}>Bairro: {bairro}</Text>
-        <Text style={styles.textoResultado}>Cidade: {cidade}</Text>
-        <Text style={styles.textoResultado}>Estado: {estado}</Text>
-      </View>
+
+      {userCep && (
+        <View style={styles.areaResultado}>
+          <Text style={styles.textoResultado}>CEP: {userCep.cep}</Text>
+          <Text style={styles.textoResultado}>
+            Logradouro: {userCep.logradouro}
+          </Text>
+          <Text style={styles.textoResultado}>Bairro: {userCep.bairro}</Text>
+          <Text style={styles.textoResultado}>
+            Cidade: {userCep.localidade}
+          </Text>
+          <Text style={styles.textoResultado}>Estado: {userCep.uf}</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
